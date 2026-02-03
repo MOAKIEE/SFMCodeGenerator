@@ -27,10 +27,6 @@
 
 > ⚠️ 需要 Windows 10 或更高版本
 
-### 🖼️ 截图
-
-![Screenshot](docs/screenshot.png)
-
 ### 🚀 快速开始
 
 1. 下载并运行 `SFMCodeGenerator.exe`
@@ -66,8 +62,6 @@ dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=
 | `input from` | 从容器输入物品 | `input from a` |
 | `output to` | 向容器输出物品 | `output to b` |
 | `if...then...end` | 条件判断 | `if a has > 0 iron_ingot then...end` |
-
-更多语法请参考 [SFM Wiki](https://github.com/TeamDman/SuperFactoryManager/wiki)
 
 ### 🤝 贡献
 
