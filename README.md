@@ -36,23 +36,6 @@
 5. 点击"复制"将代码复制到剪贴板
 6. 在游戏中打开 SFM Manager，粘贴代码
 
-### 🛠️ 从源码构建
-
-```bash
-# 克隆仓库
-git clone https://github.com/MOAKIEE/SFMCodeGenerator.git
-cd SFMCodeGenerator
-
-# 还原依赖
-dotnet restore
-
-# 运行
-dotnet run --project SFMCodeGenerator/SFMCodeGenerator.csproj
-
-# 发布为单文件 exe
-dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
-```
-
 ### 📖 SFM 语法参考
 
 | 语句 | 说明 | 示例 |
@@ -100,24 +83,6 @@ Download the latest `SFMCodeGenerator.exe` from the [Releases](https://github.co
 4. Add INPUT/OUTPUT statements
 5. Click "Copy" to copy code to clipboard
 6. Open SFM Manager in-game and paste the code
-
-### 🛠️ Build from Source
-
-```bash
-# Clone repository
-git clone https://github.com/MOAKIEE/SFMCodeGenerator.git
-cd SFMCodeGenerator
-
-# Restore dependencies
-dotnet restore
-
-# Run
-dotnet run --project SFMCodeGenerator/SFMCodeGenerator.csproj
-
-# Publish as single-file exe
-dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
-```
-
 ### 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
