@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:SFMCodeGenerator.ViewModels"
         xmlns:models="clr-namespace:SFMCodeGenerator.Models"
-        Title="SFM Code Generator - 超级工厂管理器代码生成器" 
+        Title="SFM Code Generator - 超级工厂管理代码生成工具" 
         Height="800" Width="1300"
         MinHeight="600" MinWidth="1000"
         WindowStartupLocation="CenterScreen"
@@ -47,6 +47,10 @@
                                 Margin="0,0,8,8"/>
                         <Button Content="流体传输" Style="{StaticResource SecondaryButton}"
                                 Command="{Binding LoadTemplateCommand}" CommandParameter="fluid"
+                                Margin="0,0,8,8"/>
+                        <Button Content="📝 管理常用" Style="{StaticResource SecondaryButton}"
+                                Command="{Binding ManageCommonItemsCommand}"
+                                ToolTip="管理常用标签和资源ID"
                                 Margin="0,0,8,8"/>
                     </WrapPanel>
 
@@ -132,8 +136,10 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,4,0">
                                     <TextBlock Text="标签" Style="{StaticResource SubHeaderLabel}"/>
-                                    <TextBox Text="{Binding InputLabel, UpdateSourceTrigger=PropertyChanged}"
-                                             Style="{StaticResource DefaultTextBox}"/>
+                                    <ComboBox IsEditable="True"
+                                              Text="{Binding InputLabel, UpdateSourceTrigger=PropertyChanged}"
+                                              ItemsSource="{Binding CommonLabels}"
+                                              Style="{StaticResource DefaultComboBox}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
                                     <TextBlock Text="数量" Style="{StaticResource SubHeaderLabel}"/>
@@ -160,12 +166,25 @@
                                 </StackPanel>
                             </Grid>
 
-                            <TextBlock Text="物品ID" Style="{StaticResource SubHeaderLabel}"/>
-                            <ComboBox IsEditable="True"
-                                      Text="{Binding InputResourceId, UpdateSourceTrigger=PropertyChanged}"
-                                      ItemsSource="{Binding CommonItems}"
-                                      Style="{StaticResource DefaultComboBox}"
-                                      Margin="0,0,0,8"/>
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                                    <TextBlock Text="资源类型" Style="{StaticResource SubHeaderLabel}"/>
+                                    <ComboBox ItemsSource="{Binding ResourceTypes}"
+                                              SelectedItem="{Binding InputResourceType}"
+                                              Style="{StaticResource DefaultComboBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                                    <TextBlock Text="资源ID (可选)" Style="{StaticResource SubHeaderLabel}"/>
+                                    <ComboBox IsEditable="True"
+                                              Text="{Binding InputResourceId, UpdateSourceTrigger=PropertyChanged}"
+                                              ItemsSource="{Binding CurrentInputResourceIds}"
+                                              Style="{StaticResource DefaultComboBox}"/>
+                                </StackPanel>
+                            </Grid>
 
                             <CheckBox Content="使用 EACH (对每个容器单独处理)" 
                                       IsChecked="{Binding InputUseEach}"
@@ -188,8 +207,10 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,4,0">
                                     <TextBlock Text="标签" Style="{StaticResource SubHeaderLabel}"/>
-                                    <TextBox Text="{Binding OutputLabel, UpdateSourceTrigger=PropertyChanged}"
-                                             Style="{StaticResource DefaultTextBox}"/>
+                                    <ComboBox IsEditable="True"
+                                              Text="{Binding OutputLabel, UpdateSourceTrigger=PropertyChanged}"
+                                              ItemsSource="{Binding CommonLabels}"
+                                              Style="{StaticResource DefaultComboBox}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
                                     <TextBlock Text="数量" Style="{StaticResource SubHeaderLabel}"/>
@@ -216,12 +237,25 @@
                                 </StackPanel>
                             </Grid>
 
-                            <TextBlock Text="物品ID" Style="{StaticResource SubHeaderLabel}"/>
-                            <ComboBox IsEditable="True"
-                                      Text="{Binding OutputResourceId, UpdateSourceTrigger=PropertyChanged}"
-                                      ItemsSource="{Binding CommonItems}"
-                                      Style="{StaticResource DefaultComboBox}"
-                                      Margin="0,0,0,8"/>
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                                    <TextBlock Text="资源类型" Style="{StaticResource SubHeaderLabel}"/>
+                                    <ComboBox ItemsSource="{Binding ResourceTypes}"
+                                              SelectedItem="{Binding OutputResourceType}"
+                                              Style="{StaticResource DefaultComboBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                                    <TextBlock Text="资源ID (可选)" Style="{StaticResource SubHeaderLabel}"/>
+                                    <ComboBox IsEditable="True"
+                                              Text="{Binding OutputResourceId, UpdateSourceTrigger=PropertyChanged}"
+                                              ItemsSource="{Binding CurrentOutputResourceIds}"
+                                              Style="{StaticResource DefaultComboBox}"/>
+                                </StackPanel>
+                            </Grid>
 
                             <CheckBox Content="使用 EACH (每个容器接收)" 
                                       IsChecked="{Binding OutputUseEach}"
@@ -273,12 +307,10 @@
                                 </StackPanel>
                             </Grid>
 
-                            <TextBlock Text="物品ID" Style="{StaticResource SubHeaderLabel}"/>
-                            <ComboBox IsEditable="True"
-                                      Text="{Binding IfResourceId, UpdateSourceTrigger=PropertyChanged}"
-                                      ItemsSource="{Binding CommonItems}"
-                                      Style="{StaticResource DefaultComboBox}"
-                                      Margin="0,0,0,8"/>
+                            <TextBlock Text="资源ID (可选)" Style="{StaticResource SubHeaderLabel}"/>
+                            <TextBox Text="{Binding IfResourceId, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource DefaultTextBox}"
+                                     Margin="0,0,0,8"/>
 
                             <Button Content="添加 IF" 
                                     Style="{StaticResource PrimaryButton}"
@@ -334,11 +366,11 @@
             </Border>
 
             <!-- 代码编辑器 -->
-            <TextBox Grid.Row="1"
-                     Text="{Binding GeneratedCode, Mode=OneWay}"
-                     Style="{StaticResource CodeTextBox}"
-                     IsReadOnly="True"
-                     Margin="16,8,16,8"/>
+            <RichTextBox x:Name="CodePreview" 
+                         Grid.Row="1"
+                         Style="{StaticResource CodeRichTextBox}"
+                         IsReadOnly="True"
+                         Margin="16,8,16,8"/>
 
             <!-- 语句列表 -->
             <Border Grid.Row="2"
@@ -417,7 +449,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" 
-                               Text="SFM Code Generator v1.0 - 超级工厂管理器代码生成工具"
+                               Text="SFM Code Generator v1.1 - 超级工厂管理代码生成工具"
                                Foreground="{StaticResource TextSecondaryBrush}"
                                VerticalAlignment="Center"/>
 

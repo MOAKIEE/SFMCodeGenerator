@@ -11,6 +11,13 @@ namespace SFMCodeGenerator.Models
         public abstract StatementType Type { get; }
         public abstract string GenerateCode(int indentLevel = 0);
         
+        /// <summary>
+        /// 用于列表显示的简短描述
+        /// </summary>
+        public abstract string DisplayText { get; }
+        
+        public override string ToString() => DisplayText;
+        
         protected string GetIndent(int level) => new string(' ', level * 4);
     }
 
@@ -97,6 +104,18 @@ namespace SFMCodeGenerator.Models
 
             return indent + string.Join(" ", parts);
         }
+
+        public override string DisplayText
+        {
+            get
+            {
+                var resource = ResourceId == "*" ? "所有物品" : ResourceId;
+                var qty = Quantity.HasValue ? $"{Quantity}个" : "";
+                var each = UseEach ? "(每个)" : "";
+                var side = Side.HasValue && Side.Value != Models.Side.Null ? $" [{Side.Value}]" : "";
+                return $"▶ INPUT {qty}{resource} ← {Label}{each}{side}";
+            }
+        }
     }
 
     /// <summary>
@@ -182,6 +201,18 @@ namespace SFMCodeGenerator.Models
 
             return indent + string.Join(" ", parts);
         }
+
+        public override string DisplayText
+        {
+            get
+            {
+                var resource = ResourceId == "*" ? "所有物品" : ResourceId;
+                var qty = Quantity.HasValue ? $"{Quantity}个" : "";
+                var each = UseEach ? "(每个)" : "";
+                var side = Side.HasValue && Side.Value != Models.Side.Null ? $" [{Side.Value}]" : "";
+                return $"◀ OUTPUT {qty}{resource} → {Label}{each}{side}";
+            }
+        }
     }
 
     /// <summary>
@@ -225,6 +256,15 @@ namespace SFMCodeGenerator.Models
             lines.Add($"{indent}end");
             return string.Join("\n", lines);
         }
+
+        public override string DisplayText
+        {
+            get
+            {
+                var thenCount = ThenStatements.Count;
+                return $"❓ IF {Condition} ({thenCount}条语句)";
+            }
+        }
     }
 
     /// <summary>
@@ -246,5 +286,9 @@ namespace SFMCodeGenerator.Models
             }
             return $"{indent}forget {Labels}";
         }
+
+        public override string DisplayText => string.IsNullOrEmpty(Labels) 
+            ? "🗑 FORGET 所有" 
+            : $"🗑 FORGET {Labels}";
     }
 }
