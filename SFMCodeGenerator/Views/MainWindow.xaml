@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:SFMCodeGenerator.ViewModels"
         xmlns:models="clr-namespace:SFMCodeGenerator.Models"
+        xmlns:views="clr-namespace:SFMCodeGenerator.Views"
         Title="SFM Code Generator - 超级工厂管理代码生成工具" 
         Height="800" Width="1300"
         MinHeight="600" MinWidth="1000"
@@ -14,18 +15,64 @@
     </Window.DataContext>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="360"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- 模式切换 Tab -->
+        <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}" Padding="16,8">
+            <StackPanel Orientation="Horizontal">
+                <RadioButton x:Name="WizardModeButton" Content="🎨 图形化模式" 
+                             Style="{StaticResource {x:Type ToggleButton}}"
+                             IsChecked="True" GroupName="Mode"
+                             Foreground="{StaticResource TextPrimaryBrush}"
+                             Background="Transparent" BorderThickness="0"
+                             Padding="16,8" FontSize="14" Cursor="Hand"/>
+                <RadioButton x:Name="AdvancedModeButton" Content="⚙️ 高级模式" 
+                             Style="{StaticResource {x:Type ToggleButton}}"
+                             GroupName="Mode"
+                             Foreground="{StaticResource TextPrimaryBrush}"
+                             Background="Transparent" BorderThickness="0"
+                             Padding="16,8" FontSize="14" Cursor="Hand" Margin="8,0,0,0"/>
+            </StackPanel>
+        </Border>
+        
+        <!-- 图形化模式内容 -->
+        <Grid Grid.Row="1">
+            <Grid.Visibility>
+                <Binding ElementName="WizardModeButton" Path="IsChecked">
+                    <Binding.Converter>
+                        <BooleanToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </Grid.Visibility>
+            <views:VisualEditorView/>
+        </Grid>
+        
+        <!-- 高级模式内容 -->
+        <Grid Grid.Row="1">
+            <Grid.Visibility>
+                <Binding ElementName="AdvancedModeButton" Path="IsChecked">
+                    <Binding.Converter>
+                        <BooleanToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </Grid.Visibility>
+            
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="360"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-        <!-- 左侧配置面板 -->
-        <Border Grid.Column="0" 
-                Background="{StaticResource SurfaceBrush}"
-                BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="0,0,1,0">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <StackPanel Margin="16">
+                <!-- 左侧配置面板 -->
+                <Border Grid.Column="0" 
+                        Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="0,0,1,0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="16">
                     
                     <!-- 程序名称 -->
                     <TextBlock Text="程序名称" Style="{StaticResource HeaderLabel}"/>
@@ -470,6 +517,8 @@
                     </TextBlock>
                 </Grid>
             </Border>
+        </Grid>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

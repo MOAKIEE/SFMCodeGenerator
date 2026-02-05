@@ -1,0 +1,184 @@
+<UserControl x:Class="SFMCodeGenerator.Views.WizardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:SFMCodeGenerator.ViewModels"
+             Background="{StaticResource BackgroundBrush}">
+    
+    <UserControl.DataContext>
+        <vm:WizardViewModel/>
+    </UserControl.DataContext>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- 执行频率 -->
+        <GroupBox Grid.Row="0" Header="❶ 执行频率" Style="{StaticResource SettingsGroupBox}" Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="每隔" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding TickInterval, UpdateSourceTrigger=PropertyChanged}" 
+                         Style="{StaticResource DefaultTextBox}" Width="60" Margin="8,0"/>
+                <TextBlock Text="tick 执行一次" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+            </StackPanel>
+        </GroupBox>
+        
+        <!-- 从哪里拿 -->
+        <GroupBox Grid.Row="1" Header="❷ 从哪里拿？" Style="{StaticResource SettingsGroupBox}" Margin="0,0,0,8">
+            <StackPanel>
+                <ItemsControl ItemsSource="{Binding Sources}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{StaticResource BackgroundLightBrush}" 
+                                    CornerRadius="6" Padding="12" Margin="0,0,0,8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <!-- 第一行 -->
+                                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBlock Text="标签:" Foreground="{StaticResource TextSecondaryBrush}" 
+                                                   VerticalAlignment="Center" Width="40"/>
+                                        <TextBox Text="{Binding Label, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Style="{StaticResource DefaultTextBox}" Width="60" Margin="0,0,16,0"/>
+                                        
+                                        <TextBlock Text="方向:" Foreground="{StaticResource TextSecondaryBrush}" 
+                                                   VerticalAlignment="Center" Width="40"/>
+                                        <ComboBox ItemsSource="{Binding DataContext.SideOptions, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  SelectedItem="{Binding Side}" 
+                                                  Style="{StaticResource DefaultComboBox}" Width="70" Margin="0,0,16,0"/>
+                                        
+                                        <TextBlock Text="数量:" Foreground="{StaticResource TextSecondaryBrush}" 
+                                                   VerticalAlignment="Center" Width="40"/>
+                                        <TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Style="{StaticResource DefaultTextBox}" Width="60"
+                                                 ToolTip="留空表示全部"/>
+                                    </StackPanel>
+                                    
+                                    <!-- 第二行 -->
+                                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+                                        <TextBlock Text="类型:" Foreground="{StaticResource TextSecondaryBrush}" 
+                                                   VerticalAlignment="Center" Width="40"/>
+                                        <ComboBox ItemsSource="{Binding DataContext.TypeOptions, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  SelectedItem="{Binding ResourceType}" 
+                                                  Style="{StaticResource DefaultComboBox}" Width="70" Margin="0,0,16,0"/>
+                                        
+                                        <TextBlock Text="资源ID:" Foreground="{StaticResource TextSecondaryBrush}" 
+                                                   VerticalAlignment="Center" Width="55"/>
+                                        <TextBox Text="{Binding ResourceId, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Style="{StaticResource DefaultTextBox}" Width="150"
+                                                 ToolTip="可选，如 minecraft:iron_ingot"/>
+                                    </StackPanel>
+                                    
+                                    <!-- 删除按钮 -->
+                                    <Button Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Content="✕" 
+                                            Style="{StaticResource SecondaryButton}" Width="30" Height="30"
+                                            Command="{Binding DataContext.RemoveSourceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button Content="+ 添加更多来源" Style="{StaticResource SecondaryButton}" 
+                        Command="{Binding AddSourceCommand}" HorizontalAlignment="Left"/>
+            </StackPanel>
+        </GroupBox>
+        
+        <!-- 放到哪里 -->
+        <GroupBox Grid.Row="2" Header="❸ 放到哪里？" Style="{StaticResource SettingsGroupBox}" Margin="0,0,0,8">
+            <StackPanel>
+                <ItemsControl ItemsSource="{Binding Targets}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{StaticResource BackgroundLightBrush}" 
+                                    CornerRadius="6" Padding="12" Margin="0,0,0,8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <!-- 第一行 -->
+                                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBlock Text="标签:" Foreground="{StaticResource TextSecondaryBrush}" 
+                                                   VerticalAlignment="Center" Width="40"/>
+                                        <TextBox Text="{Binding Label, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Style="{StaticResource DefaultTextBox}" Width="60" Margin="0,0,16,0"/>
+                                        
+                                        <TextBlock Text="方向:" Foreground="{StaticResource TextSecondaryBrush}" 
+                                                   VerticalAlignment="Center" Width="40"/>
+                                        <ComboBox ItemsSource="{Binding DataContext.SideOptions, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  SelectedItem="{Binding Side}" 
+                                                  Style="{StaticResource DefaultComboBox}" Width="70" Margin="0,0,16,0"/>
+                                        
+                                        <TextBlock Text="数量:" Foreground="{StaticResource TextSecondaryBrush}" 
+                                                   VerticalAlignment="Center" Width="40"/>
+                                        <TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Style="{StaticResource DefaultTextBox}" Width="60"
+                                                 ToolTip="留空表示全部"/>
+                                    </StackPanel>
+                                    
+                                    <!-- 第二行 -->
+                                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+                                        <TextBlock Text="类型:" Foreground="{StaticResource TextSecondaryBrush}" 
+                                                   VerticalAlignment="Center" Width="40"/>
+                                        <ComboBox ItemsSource="{Binding DataContext.TypeOptions, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  SelectedItem="{Binding ResourceType}" 
+                                                  Style="{StaticResource DefaultComboBox}" Width="70" Margin="0,0,16,0"/>
+                                        
+                                        <TextBlock Text="资源ID:" Foreground="{StaticResource TextSecondaryBrush}" 
+                                                   VerticalAlignment="Center" Width="55"/>
+                                        <TextBox Text="{Binding ResourceId, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Style="{StaticResource DefaultTextBox}" Width="150"
+                                                 ToolTip="可选，如 minecraft:iron_ingot"/>
+                                    </StackPanel>
+                                    
+                                    <!-- 删除按钮 -->
+                                    <Button Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Content="✕" 
+                                            Style="{StaticResource SecondaryButton}" Width="30" Height="30"
+                                            Command="{Binding DataContext.RemoveTargetCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button Content="+ 添加更多目标" Style="{StaticResource SecondaryButton}" 
+                        Command="{Binding AddTargetCommand}" HorizontalAlignment="Left"/>
+            </StackPanel>
+        </GroupBox>
+        
+        <!-- 代码预览 -->
+        <GroupBox Grid.Row="3" Header="📋 生成的代码" Style="{StaticResource SettingsGroupBox}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <TextBox Grid.Row="0" Text="{Binding GeneratedCode, Mode=OneWay}" 
+                         Style="{StaticResource CodeTextBox}" IsReadOnly="True"
+                         VerticalScrollBarVisibility="Auto"/>
+                
+                <Button Grid.Row="1" Content="📋 复制代码" Style="{StaticResource PrimaryButton}"
+                        Command="{Binding CopyCodeCommand}" HorizontalAlignment="Right" Margin="0,8,0,0"/>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>
