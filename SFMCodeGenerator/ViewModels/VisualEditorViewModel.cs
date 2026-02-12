@@ -204,8 +204,14 @@ namespace SFMCodeGenerator.ViewModels
             if (!string.IsNullOrWhiteSpace(node.Quantity))
                 sb.Append($" {node.Quantity}");
 
-            if (!string.IsNullOrWhiteSpace(node.ResourceId))
-                sb.Append($" {typePrefix}{node.ResourceId}");
+            if (!string.IsNullOrEmpty(typePrefix))
+            {
+                sb.Append($" {(string.IsNullOrWhiteSpace(node.ResourceId) ? typePrefix : $"{typePrefix}{node.ResourceId}")}");
+            }
+            else if (!string.IsNullOrWhiteSpace(node.ResourceId))
+            {
+                sb.Append($" {node.ResourceId}");
+            }
 
             sb.Append($" from {node.Label}");
             AppendSide(sb, node.Side);
@@ -228,8 +234,14 @@ namespace SFMCodeGenerator.ViewModels
             if (!string.IsNullOrWhiteSpace(node.Quantity))
                 sb.Append($" {node.Quantity}");
 
-            if (!string.IsNullOrWhiteSpace(node.ResourceId))
-                sb.Append($" {typePrefix}{node.ResourceId}");
+            if (!string.IsNullOrEmpty(typePrefix))
+            {
+                sb.Append($" {(string.IsNullOrWhiteSpace(node.ResourceId) ? typePrefix : $"{typePrefix}{node.ResourceId}")}");
+            }
+            else if (!string.IsNullOrWhiteSpace(node.ResourceId))
+            {
+                sb.Append($" {node.ResourceId}");
+            }
 
             sb.Append($" to {node.Label}");
             AppendSide(sb, node.Side);
